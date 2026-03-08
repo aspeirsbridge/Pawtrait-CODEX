@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Vibrant pet-themed color palette */
+    --background: 280 25% 98%;
+    --foreground: 280 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 280 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 15% 15%;
+
+    /* Primary - Vibrant purple/violet for main actions */
+    --primary: 270 60% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 270 60% 45%;
+
+    /* Secondary - Warm coral/orange for secondary actions */
+    --secondary: 20 90% 65%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 20 90% 55%;
+
+    /* Accent - Bright blue for highlights */
+    --accent: 200 90% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Muted - Soft lavender backgrounds */
+    --muted: 270 20% 95%;
+    --muted-foreground: 280 10% 45%;
+
+    /* Success - Green for positive actions */
+    --success: 150 60% 50%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 20% 88%;
+    --input: 270 20% 92%;
+    --ring: 270 60% 55%;
+
+    --radius: 1rem;
+    
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 55%), hsl(290 70% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(20 90% 65%), hsl(35 90% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(200 90% 55%), hsl(220 85% 60%));
+    --gradient-hero: linear-gradient(180deg, hsl(280 25% 98%), hsl(270 30% 95%));
+    
+    /* Shadows with color tints */
+    --shadow-primary: 0 10px 30px -10px hsl(270 60% 55% / 0.3);
+    --shadow-secondary: 0 8px 24px -8px hsl(20 90% 65% / 0.25);
+    --shadow-soft: 0 4px 20px -4px hsl(280 20% 70% / 0.2);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 280 20% 10%;
+    --foreground: 280 10% 95%;
+
+    --card: 280 18% 14%;
+    --card-foreground: 280 10% 95%;
+
+    --popover: 280 18% 14%;
+    --popover-foreground: 280 10% 95%;
+
+    --primary: 270 60% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 270 60% 50%;
+
+    --secondary: 20 85% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 20 85% 50%;
+
+    --accent: 200 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 280 15% 18%;
+    --muted-foreground: 280 10% 65%;
+
+    --success: 150 55% 55%;
+    --success-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 280 15% 22%;
+    --input: 280 15% 22%;
+    --ring: 270 60% 60%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(270 60% 60%), hsl(290 70% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(20 85% 60%), hsl(35 85% 65%));
+    --gradient-accent: linear-gradient(135deg, hsl(200 85% 60%), hsl(220 80% 65%));
+    --gradient-hero: linear-gradient(180deg, hsl(280 20% 10%), hsl(280 18% 14%));
+    
+    --shadow-primary: 0 10px 30px -10px hsl(270 60% 60% / 0.4);
+    --shadow-secondary: 0 8px 24px -8px hsl(20 85% 60% / 0.3);
+    --shadow-soft: 0 4px 20px -4px hsl(280 20% 10% / 0.4);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Safe area for mobile devices */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

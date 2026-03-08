@@ -1,0 +1,9 @@
+project_id = "wifhzvembrhhbwaxzyga"
+
+# JWT verification enabled by default for security
+
+[functions.apply-filter]
+verify_jwt = false
+
+[functions.edit-image]
+verify_jwt = false
