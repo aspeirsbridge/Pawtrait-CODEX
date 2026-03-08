@@ -27,8 +27,4 @@ dist-ssr
 .npm-cache/
 .firebase/
 .env
-# Local-only files
-.env
-.firebase/
-.npm-cache/
 supabase/.temp/
