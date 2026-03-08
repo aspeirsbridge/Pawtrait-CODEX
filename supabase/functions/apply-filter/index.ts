@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -89,10 +89,10 @@ serve(async (req) => {
     }
 
     const stylePrompts: Record<string, string> = {
-      watercolor: "Transform this pet photo into a watercolor painting with soft edges, pastel colors, and visible brushstroke textures. Keep the pet as the clear subject.",
-      sketch: "Convert this pet photo into a pencil sketch with grayscale tones, hand-drawn lines, and charcoal-like shading. Keep the pet recognizable.",
-      banksy: "Transform this pet photo into a Banksy-inspired street art style with stencil-like contrast, bold outlines, and urban graffiti aesthetic.",
-      picasso: "Reimagine this pet photo in Picasso cubist style with geometric forms, multiple perspectives, and abstract composition while keeping the pet identifiable."
+      watercolor: "Transform this pet photo into a watercolor painting with soft edges, pastel colors, and visible brushstroke textures. Keep the pet as the clear subject and recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
+      sketch: "Convert this pet photo into a pencil sketch with grayscale tones, hand-drawn lines, and charcoal-like shading. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
+      banksy: "Transform this pet photo into a Banksy-inspired street art style with stencil-like contrast, bold outlines, and urban graffiti aesthetic. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
+      picasso: "Reimagine this pet photo in Picasso cubist style with geometric forms, multiple perspectives, and abstract composition. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks."
     };
 
     if (filterId === 'original') {
