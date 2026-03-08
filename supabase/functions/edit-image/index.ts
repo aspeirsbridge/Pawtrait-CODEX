@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -86,6 +86,12 @@ serve(async (req) => {
       );
     }
 
+    const guardedPrompt = [
+      `Apply this edit request to the provided pet photo: ${prompt.trim()}`,
+      'Keep the pet recognizable.',
+      'Preserve the original pose and key facial features.',
+      'Do not add extra animals, humans, text, logos, or watermarks.',
+    ].join(' ');
     const AI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     const AI_MODEL = Deno.env.get('AI_MODEL') ?? 'gemini-2.0-flash-exp-image-generation';
 
@@ -106,7 +112,7 @@ serve(async (req) => {
         contents: [
           {
             parts: [
-              { text: prompt },
+              { text: guardedPrompt },
               {
                 inline_data: {
                   mime_type: normalizedImage.mimeType,
