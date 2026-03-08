@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { getUserFriendlyErrorMessage, runApi } from "@/lib/api";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -21,27 +22,47 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+        await runApi(async () => {
+          const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) {
+            throw error;
+          }
+        }, {
+          operation: "Sign in",
+          timeoutMs: 20_000,
+          retries: 1,
         });
-        if (error) throw error;
+
         toast.success("Welcome back!");
         navigate("/");
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
+        await runApi(async () => {
+          const { error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: `${window.location.origin}/`,
+            },
+          });
+
+          if (error) {
+            throw error;
+          }
+        }, {
+          operation: "Sign up",
+          timeoutMs: 20_000,
+          retries: 1,
         });
-        if (error) throw error;
+
         toast.success("Account created! You can now log in.");
         setIsLogin(true);
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+    } catch (error) {
+      toast.error(getUserFriendlyErrorMessage(error));
     } finally {
       setLoading(false);
     }

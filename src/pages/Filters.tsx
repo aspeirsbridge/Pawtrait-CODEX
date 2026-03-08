@@ -6,6 +6,7 @@ import { EnhancedPawLoader } from "@/components/EnhancedPawLoader";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { getUserFriendlyErrorMessage, runApi } from "@/lib/api";
 import filterOriginal from "@/assets/filter-preview-original.jpg";
 import filterWatercolor from "@/assets/filter-preview-watercolor.jpg";
 import filterSketch from "@/assets/filter-preview-sketch.jpg";
@@ -77,30 +78,37 @@ const Filters = () => {
   const handleFilterSelect = async (filterId: string) => {
     setSelectedFilter(filterId);
     setIsProcessing(true);
-    
-    // Scroll to top to show loading animation
+
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      window.scrollTo({ top: 0, behavior: "instant" });
     }, 0);
 
     try {
-      const { data, error } = await supabase.functions.invoke('apply-filter', {
-        body: {
-          imageUrl,
-          filterId,
-        },
+      const data = await runApi(async () => {
+        const { data, error } = await supabase.functions.invoke("apply-filter", {
+          body: {
+            imageUrl,
+            filterId,
+          },
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data?.imageUrl) {
+          throw new Error("No image URL returned");
+        }
+
+        return data;
+      }, {
+        operation: "Apply filter",
+        timeoutMs: 45_000,
+        retries: 1,
       });
 
-      if (error) {
-        throw new Error(error.message || 'Failed to apply filter');
-      }
-
-      if (!data?.imageUrl) {
-        throw new Error('No image URL returned');
-      }
-      setIsProcessing(false);
       toast.success("Filter applied successfully!");
-      
+
       navigate("/edit", {
         state: {
           imageUrl: data.imageUrl,
@@ -109,9 +117,10 @@ const Filters = () => {
         },
       });
     } catch (error) {
-      console.error('Filter error:', error);
+      console.error("Filter error:", error);
+      toast.error(getUserFriendlyErrorMessage(error));
+    } finally {
       setIsProcessing(false);
-      toast.error(error instanceof Error ? error.message : 'Failed to apply filter');
     }
   };
 
@@ -119,7 +128,6 @@ const Filters = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero pb-24">
-      {/* Header */}
       <header className="sticky top-0 bg-card/95 backdrop-blur-lg border-b border-border z-10 px-6 py-4">
         <div className="flex items-center gap-4">
           <Button
@@ -139,23 +147,22 @@ const Filters = () => {
         </div>
       </header>
 
-      {/* Preview Image */}
       <div className="px-6 py-6">
         <div className={cn(
           "relative rounded-3xl overflow-hidden shadow-soft transition-all duration-300",
           isProcessing ? "min-h-[500px]" : ""
         )}>
           {!isProcessing && (
-          <img
-            src={imageUrl}
-            alt="Pet preview"
-            className="w-full max-h-96 object-contain"
-          />
+            <img
+              src={imageUrl}
+              alt="Pet preview"
+              className="w-full max-h-96 object-contain"
+            />
           )}
           {isProcessing && (
             <div className="absolute inset-0 bg-background/95 backdrop-blur-sm">
-              <EnhancedPawLoader 
-                message="Applying filter..." 
+              <EnhancedPawLoader
+                message="Applying filter..."
                 previewImage={imageUrl}
                 estimatedDuration={30}
               />
@@ -164,7 +171,6 @@ const Filters = () => {
         </div>
       </div>
 
-      {/* Filter Options */}
       <div className="px-6 space-y-3">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-primary" />

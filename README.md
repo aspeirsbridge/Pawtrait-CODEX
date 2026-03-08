@@ -7,6 +7,21 @@ Standalone local React + Vite app. No Lovable subscription is required.
 - Node.js 20+ and npm
 - Supabase project (for backend and storage)
 
+## Frontend env setup (required)
+
+Create a `.env` file in the project root with:
+
+```bash
+VITE_SUPABASE_URL="https://<your-project-ref>.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY="<your-anon-jwt-or-sb_publishable_key>"
+# Optional for subpath hosting (example: /pawtrait/)
+VITE_BASE_PATH="/"
+```
+
+Notes:
+- A ready template exists at `.env.example`.
+- The app now validates these values at startup and will show a config error page if they are missing or malformed.
+
 ## Local run
 
 1. Install dependencies:
