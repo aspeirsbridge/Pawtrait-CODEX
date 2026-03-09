@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,9 +90,9 @@ serve(async (req) => {
 
     const stylePrompts: Record<string, string> = {
       watercolor: "Transform this pet photo into a watercolor painting with soft edges, pastel colors, and visible brushstroke textures. Keep the pet as the clear subject and recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
-      sketch: "Convert this pet photo into a pencil sketch with grayscale tones, hand-drawn lines, and charcoal-like shading. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
-      banksy: "Transform this pet photo into a Banksy-inspired street art style with stencil-like contrast, bold outlines, and urban graffiti aesthetic. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks.",
-      picasso: "Reimagine this pet photo in Picasso cubist style with geometric forms, multiple perspectives, and abstract composition. Keep the pet recognizable. Preserve the original pose and key facial features. Do not add extra animals, humans, text, logos, or watermarks."
+      sketch: "Convert this pet photo into a realistic graphite pencil drawing with high detail and natural grayscale tonal range. Preserve fine fur strands, whiskers, eye reflections, nose texture, and facial anatomy so the pet stays clearly recognizable. Use controlled line weight, soft gradient shading, and localized cross-hatching only where needed for form; avoid uniform repeating hatch patterns across the whole image. Keep background simplified and lighter than the subject to maintain focus. Preserve original pose and framing. Do not add extra animals, humans, text, logos, or watermarks.",
+      banksy: "Transform this pet photo into a high-quality stencil street-art mural aesthetic on a textured concrete wall. Use layered stencil tones (3-5 tonal steps), strong but controlled contrast, crisp edges, subtle spray-paint overspray, and light paint drips. Preserve facial structure, eyes, muzzle details, and fur landmarks so the pet remains clearly recognizable. Keep composition close to the original framing and pose. Avoid full black-fill silhouettes and avoid crushing midtones. Do not add extra animals, humans, text, logos, or watermarks.",
+      picasso: "Reimagine this pet photo as a refined cubist portrait painting with interlocking geometric planes and faceted forms, inspired by early-to-mid 20th century Cubism. Keep the pet clearly recognizable and preserve the original pose, silhouette, eye placement, muzzle shape, and key facial landmarks. Use 4-7 coherent color families with bold but balanced blocks (avoid neon overload), strong contour lines, and moderate abstraction. Keep readable depth and anatomy; do not fragment the face into unrecognizable shards. Include subtle painterly canvas texture and clean composition close to the source framing. Do not add extra animals, humans, text, logos, or watermarks.",
     };
 
     if (filterId === 'original') {
