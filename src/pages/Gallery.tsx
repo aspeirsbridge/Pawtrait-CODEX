@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -283,8 +283,8 @@ const Gallery = () => {
                       className="absolute top-0 bottom-0 w-0.5 bg-white/90 shadow-md"
                       style={{ left: `${comparePosition}%` }}
                     />
-                    <span className="absolute left-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Original</span>
-                    <span className="absolute right-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Edited</span>
+                    <span className="absolute left-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Edited</span>
+                    <span className="absolute right-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Original</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
@@ -402,3 +402,5 @@ const Gallery = () => {
 };
 
 export default Gallery;
+
+
