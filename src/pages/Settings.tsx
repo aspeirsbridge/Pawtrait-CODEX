@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Crown, Bell, HelpCircle, Shield, Sparkles, Mail } from "lucide-react";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { getUserFriendlyErrorMessage, runApi } from "@/lib/api";
 
 const Settings = () => {
   const [isPremium, setIsPremium] = useState(false);
@@ -31,19 +32,26 @@ const Settings = () => {
 
     setIsSending(true);
     try {
-      const { error } = await supabase.functions.invoke('send-contact-email', {
-        body: { userEmail, message }
+      const data = await runApi(async () => {
+        const { data, error } = await supabase.functions.invoke("send-contact-email", {
+          body: { userEmail, message },
+        });
+
+        if (error) throw error;
+        return data as { queued?: boolean } | null;
+      }, {
+        operation: "Send feedback",
+        timeoutMs: 20_000,
+        retries: 1,
       });
 
-      if (error) throw error;
-
-      toast.success("Feedback sent successfully!");
+      toast.success(data?.queued ? "Feedback received." : "Feedback sent successfully!");
       setContactDialogOpen(false);
       setUserEmail("");
       setMessage("");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending feedback:", error);
-      toast.error("Failed to send feedback. Please try again.");
+      toast.error(getUserFriendlyErrorMessage(error));
     } finally {
       setIsSending(false);
     }
@@ -201,10 +209,7 @@ const Settings = () => {
         {/* App Info */}
         <div className="pt-8 pb-4 text-center space-y-2 animate-slide-up" style={{ animationDelay: "0.3s" }}>
           <p className="text-sm text-muted-foreground">Pawtrait v1.0.0</p>
-          <p className="text-xs text-muted-foreground">
-            Made with ❤️ for pet lovers
-          </p>
-        </div>
+</div>
       </div>
 
       {/* Contact Dialog */}
