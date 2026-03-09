@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -21,6 +21,7 @@ export type Database = {
           filter_name: string
           id: string
           image_url: string
+          original_image_url: string | null
           user_id: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           filter_name: string
           id?: string
           image_url: string
+          original_image_url?: string | null
           user_id: string
         }
         Update: {
@@ -37,6 +39,7 @@ export type Database = {
           filter_name?: string
           id?: string
           image_url?: string
+          original_image_url?: string | null
           user_id?: string
         }
         Relationships: []

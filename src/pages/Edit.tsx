@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ const Edit = () => {
   const { user, loading: authLoading } = useAuth();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [filterName, setFilterName] = useState<string>("");
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
   const [editPrompt, setEditPrompt] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [showCropDialog, setShowCropDialog] = useState(false);
@@ -34,10 +35,11 @@ const Edit = () => {
       return;
     }
 
-    const state = location.state as { imageUrl?: string; filterId?: string; filterName?: string } | null;
+    const state = location.state as { imageUrl?: string; filterId?: string; filterName?: string; originalImageUrl?: string } | null;
     if (state?.imageUrl) {
       setImageUrl(state.imageUrl);
       setFilterName(state.filterName || "Original");
+      setOriginalImageUrl(state.originalImageUrl || state.imageUrl);
     } else {
       navigate("/");
     }
@@ -251,6 +253,7 @@ const Edit = () => {
             image_url: publicUrl,
             filter_name: filterName,
             description: "",
+            original_image_url: originalImageUrl,
           });
 
         if (error) {

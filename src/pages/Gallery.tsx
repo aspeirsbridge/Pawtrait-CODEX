@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Share2, Edit3, Plus, X, LogOut } from "lucide-react";
+import { Trash2, Share2, Edit3, Plus, X, LogOut, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -21,6 +21,7 @@ import watermarkLogo from "@/assets/watermark-logo.png";
 interface Pawtrait {
   id: string;
   image_url: string;
+  original_image_url?: string | null;
   filter_name: string;
   description: string;
   created_at: string;
@@ -35,6 +36,8 @@ const Gallery = () => {
   const [editDescription, setEditDescription] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [previewMode, setPreviewMode] = useState<"edited" | "compare">("edited");
+  const [comparePosition, setComparePosition] = useState(50);
 
   useEffect(() => {
     if (!authLoading) {
@@ -46,20 +49,25 @@ const Gallery = () => {
     }
   }, [user, authLoading, navigate]);
 
+  useEffect(() => {
+    setPreviewMode("edited");
+    setComparePosition(50);
+  }, [selectedId]);
+
   const loadPawtraits = async () => {
     if (!user) return;
-    
+
     try {
       const { data, error } = await supabase
-        .from('pawtraits')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+        .from("pawtraits")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       setPawtraits(data || []);
     } catch (error) {
-      console.error('Error fetching pawtraits:', error);
+      console.error("Error fetching pawtraits:", error);
       toast.error("Failed to load gallery");
     } finally {
       setLoading(false);
@@ -68,18 +76,13 @@ const Gallery = () => {
 
   const handleDelete = async (id: string, imageUrl: string) => {
     try {
-      const filename = imageUrl.split('/').pop();
-      
+      const filename = imageUrl.split("/").pop();
+
       if (filename) {
-        await supabase.storage
-          .from('pawtraits')
-          .remove([filename]);
+        await supabase.storage.from("pawtraits").remove([filename]);
       }
 
-      const { error } = await supabase
-        .from('pawtraits')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from("pawtraits").delete().eq("id", id);
 
       if (error) throw error;
 
@@ -88,7 +91,7 @@ const Gallery = () => {
       setSelectedId(null);
       toast.success("Pawtrait deleted");
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
       toast.error("Failed to delete pawtrait");
     }
   };
@@ -96,19 +99,21 @@ const Gallery = () => {
   const handleSaveDescription = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('pawtraits')
+        .from("pawtraits")
         .update({ description: editDescription })
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
 
-      setPawtraits(pawtraits.map((p) =>
-        p.id === id ? { ...p, description: editDescription } : p
-      ));
+      setPawtraits(
+        pawtraits.map((p) =>
+          p.id === id ? { ...p, description: editDescription } : p
+        )
+      );
       setEditingId(null);
       toast.success("Description updated");
     } catch (error) {
-      console.error('Update error:', error);
+      console.error("Update error:", error);
       toast.error("Failed to update description");
     }
   };
@@ -118,16 +123,20 @@ const Gallery = () => {
       try {
         const response = await fetch(pawtrait.image_url);
         const blob = await response.blob();
-        const file = new File([blob], `pawtrait-${pawtrait.filter_name}.png`, { type: 'image/png' });
-        
+        const file = new File([blob], `pawtrait-${pawtrait.filter_name}.png`, {
+          type: "image/png",
+        });
+
         await navigator.share({
           title: "My Pawtrait",
-          text: pawtrait.description || `Check out my pet's ${pawtrait.filter_name} style portrait!`,
+          text:
+            pawtrait.description ||
+            `Check out my pet's ${pawtrait.filter_name} style portrait!`,
           files: [file],
         });
-      } catch (err) {
-        console.error("Share failed:", err);
-        if ((err as Error).name !== 'AbortError') {
+      } catch (error) {
+        console.error("Share failed:", error);
+        if ((error as Error).name !== "AbortError") {
           toast.error("Share failed");
         }
       }
@@ -137,19 +146,15 @@ const Gallery = () => {
   };
 
   const selected = selectedId ? pawtraits.find((p) => p.id === selectedId) : null;
+  const originalForCompare = selected?.original_image_url || "";
+  const hasTrueOriginal = Boolean(selected?.original_image_url);
 
   return (
     <div className="min-h-screen bg-gradient-hero pb-24 relative">
-      {/* Watermark Logo */}
       <div className="fixed inset-0 flex items-start justify-center pointer-events-none z-0">
-        <img 
-          src={watermarkLogo} 
-          alt="" 
-          className="w-full max-w-xs opacity-[0.18]"
-        />
+        <img src={watermarkLogo} alt="" className="w-full max-w-xs opacity-[0.18]" />
       </div>
-      
-      {/* Header */}
+
       <header className="sticky top-0 bg-card/95 backdrop-blur-lg border-b border-border z-10 px-6 py-4 relative">
         <div className="flex items-center justify-between">
           <div>
@@ -179,7 +184,6 @@ const Gallery = () => {
         </div>
       </header>
 
-      {/* Gallery Grid */}
       {loading ? (
         <div className="flex items-center justify-center py-20 relative z-10">
           <p className="text-muted-foreground">Loading gallery...</p>
@@ -190,13 +194,8 @@ const Gallery = () => {
             <Plus className="w-10 h-10 text-muted-foreground" />
           </div>
           <h2 className="text-xl font-bold mb-2">No Pawtraits Yet</h2>
-          <p className="text-muted-foreground mb-6">
-            Start creating amazing pet art!
-          </p>
-          <Button
-            onClick={() => navigate("/")}
-            className="bg-gradient-primary hover:opacity-90"
-          >
+          <p className="text-muted-foreground mb-6">Start creating amazing pet art!</p>
+          <Button onClick={() => navigate("/")} className="bg-gradient-primary hover:opacity-90">
             Create Your First Pawtrait
           </Button>
         </div>
@@ -217,16 +216,13 @@ const Gallery = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="absolute bottom-0 left-0 right-0 p-3 text-white text-left">
                 <p className="text-xs font-semibold">{pawtrait.filter_name}</p>
-                <p className="text-xs opacity-80 truncate">
-                  {pawtrait.description || "No description"}
-                </p>
+                <p className="text-xs opacity-80 truncate">{pawtrait.description || "No description"}</p>
               </div>
             </button>
           ))}
         </div>
       )}
 
-      {/* Detail View Dialog */}
       {selected && (
         <AlertDialog open={!!selectedId} onOpenChange={() => setSelectedId(null)}>
           <AlertDialogContent className="max-w-lg rounded-3xl">
@@ -239,12 +235,71 @@ const Gallery = () => {
               </button>
               <AlertDialogTitle>{selected.filter_name} Style</AlertDialogTitle>
             </AlertDialogHeader>
+
             <div className="space-y-4">
-              <img
-                src={selected.image_url}
-                alt="Selected pawtrait"
-                className="w-full max-h-[50vh] object-contain rounded-2xl"
-              />
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant={previewMode === "edited" ? "default" : "outline"}
+                  onClick={() => setPreviewMode("edited")}
+                  className="rounded-full"
+                >
+                  Edited
+                </Button>
+                <Button
+                  size="sm"
+                  variant={previewMode === "compare" ? "default" : "outline"}
+                  onClick={() => setPreviewMode("compare")}
+                  className="rounded-full"
+                  disabled={!hasTrueOriginal}
+                  title={!hasTrueOriginal ? "Original image not available for this item" : undefined}
+                >
+                  Compare
+                </Button>
+              </div>
+              
+
+              {previewMode === "edited" ? (
+                <img
+                  src={selected.image_url}
+                  alt="Selected pawtrait"
+                  className="w-full max-h-[50vh] object-contain rounded-2xl"
+                />
+              ) : (
+                <div className="space-y-2">
+                  <div className="relative w-full aspect-square rounded-2xl overflow-hidden border border-border bg-muted">
+                    <img
+                      src={originalForCompare}
+                      alt="Original"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <img
+                      src={selected.image_url}
+                      alt="Edited"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ clipPath: `inset(0 ${100 - comparePosition}% 0 0)` }}
+                    />
+                    <div
+                      className="absolute top-0 bottom-0 w-0.5 bg-white/90 shadow-md"
+                      style={{ left: `${comparePosition}%` }}
+                    />
+                    <span className="absolute left-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Original</span>
+                    <span className="absolute right-2 top-2 text-[10px] px-2 py-1 rounded-full bg-black/60 text-white">Edited</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={comparePosition}
+                      onChange={(e) => setComparePosition(Number(e.target.value))}
+                      className="w-full"
+                    />
+                  </div>
+                  </div>
+              )}
+
               {editingId === selected.id ? (
                 <div className="space-y-2">
                   <Input
@@ -290,6 +345,7 @@ const Gallery = () => {
                 </div>
               )}
             </div>
+
             <AlertDialogFooter className="flex-col sm:flex-row gap-2">
               <Button
                 onClick={() => handleShare(selected)}
@@ -315,7 +371,6 @@ const Gallery = () => {
         </AlertDialog>
       )}
 
-      {/* Delete Confirmation */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent className="rounded-3xl">
           <AlertDialogHeader>
