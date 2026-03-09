@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, Save, Share2, Sparkles, Crop, RotateCw, Undo } from "lucide-react";
+import { ArrowLeft, Palette, Save, Share2, Sparkles, Crop, RotateCw, Undo } from "lucide-react";
 import { EnhancedPawLoader } from "@/components/EnhancedPawLoader";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -145,6 +145,19 @@ const Edit = () => {
     img.src = imageUrl;
   };
 
+
+  const handleChangeFilter = () => {
+    if (!originalImageUrl) {
+      toast.error("Original image not available");
+      return;
+    }
+
+    navigate("/filters", {
+      state: {
+        imageUrl: originalImageUrl,
+      },
+    });
+  };
   const handleEdit = async () => {
     if (!editPrompt.trim()) {
       toast.error("Please enter an edit instruction");
@@ -317,7 +330,7 @@ const Edit = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/filters")}
+            onClick={handleChangeFilter}
             className="rounded-full"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -364,6 +377,15 @@ const Edit = () => {
           </div>
 
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleChangeFilter}
+              className="flex items-center gap-2"
+            >
+              <Palette className="h-4 w-4" />
+              Change Filter
+            </Button>
             <Button
               variant="outline"
               size="sm"
