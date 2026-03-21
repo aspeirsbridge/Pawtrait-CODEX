@@ -1,4 +1,4 @@
-﻿import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,6 +6,17 @@ const corsHeaders = {
 };
 
 const MAX_IMAGE_INPUT_SIZE = 10 * 1024 * 1024;
+
+interface GeminiResponsePart {
+  inlineData?: {
+    data?: string;
+    mimeType?: string;
+  };
+  inline_data?: {
+    data?: string;
+    mime_type?: string;
+  };
+}
 
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';
@@ -93,7 +104,7 @@ serve(async (req) => {
       'Do not add extra animals, humans, text, logos, or watermarks.',
     ].join(' ');
     const AI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    const AI_MODEL = Deno.env.get('AI_MODEL') ?? 'gemini-2.0-flash-exp-image-generation';
+    const AI_MODEL = Deno.env.get('AI_MODEL') ?? 'gemini-2.5-flash-image';
 
     if (!AI_API_KEY) {
       return new Response(
@@ -139,8 +150,8 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const parts = data?.candidates?.[0]?.content?.parts ?? [];
-    const imagePart = parts.find((part: any) => part?.inlineData?.data || part?.inline_data?.data);
+    const parts: GeminiResponsePart[] = data?.candidates?.[0]?.content?.parts ?? [];
+    const imagePart = parts.find((part) => part?.inlineData?.data || part?.inline_data?.data);
     const inline = imagePart?.inlineData ?? imagePart?.inline_data;
 
     if (!inline?.data) {
@@ -166,3 +177,7 @@ serve(async (req) => {
     );
   }
 });
+
+
+
+

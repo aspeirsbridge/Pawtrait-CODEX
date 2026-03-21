@@ -73,6 +73,29 @@ const Filters = () => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [imageHistory, setImageHistory] = useState<string[]>([]);
 
+  const extractFunctionErrorMessage = async (error: unknown): Promise<string | null> => {
+    if (!error || typeof error !== "object" || !("context" in error)) {
+      return null;
+    }
+
+    const context = (error as { context?: unknown }).context;
+    if (!(context instanceof Response)) {
+      return null;
+    }
+
+    try {
+      const payload = await context.clone().json() as { error?: string; message?: string };
+      return payload.error || payload.message || null;
+    } catch {
+      try {
+        const text = await context.clone().text();
+        return text || null;
+      } catch {
+        return null;
+      }
+    }
+  };
+
   useEffect(() => {
     const state = location.state as { imageUrl?: string; fileName?: string } | null;
     if (state?.imageUrl) {
@@ -194,7 +217,8 @@ const Filters = () => {
           });
 
           if (error) {
-            throw error;
+            const detailedMessage = await extractFunctionErrorMessage(error);
+            throw new Error(detailedMessage || error.message || "Failed to apply filter");
           }
 
           if (!data?.imageUrl) {

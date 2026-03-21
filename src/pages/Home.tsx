@@ -5,6 +5,8 @@ import { useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import heroImage from "@/assets/hero-pets.jpg";
 import watermarkLogo from "@/assets/watermark-logo.png";
+import { optimizeUploadedImage } from "@/lib/image";
+import { toast } from "sonner";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -33,7 +35,7 @@ const Home = () => {
     }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!user) {
       navigate("/auth");
       return;
@@ -41,13 +43,15 @@ const Home = () => {
     
     const file = event.target.files?.[0];
     if (file) {
-      // Convert file to base64 data URL for backend processing
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target?.result as string;
+      try {
+        const imageUrl = await optimizeUploadedImage(file);
         navigate("/filters", { state: { imageUrl, fileName: file.name } });
-      };
-      reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Image preparation error:", error);
+        toast.error("We couldn't prepare that photo. Please try another image.");
+      } finally {
+        event.target.value = "";
+      }
     }
   };
 
