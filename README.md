@@ -47,3 +47,16 @@ Deploy functions after setting secrets:
 
 - `npm run build`
 - `npm run preview`
+
+## Deployment
+
+A dedicated deployment guide is included here:
+
+- [DEPLOYMENT.md](C:\Users\andre\OneDrive\Documents\CODEX\pawtrait-pet-palace-main\pawtrait-pet-palace-main\DEPLOYMENT.md)
+
+Helpful deployment commands:
+
+- `npm run deploy:hosting`
+- `npm run deploy:function:apply-filter`
+- `npm run deploy:function:edit-image`
+- `npm run deploy:functions`

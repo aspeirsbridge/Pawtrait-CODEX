@@ -8,7 +8,11 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:function:apply-filter": "supabase functions deploy apply-filter --no-verify-jwt --project-ref wifhzvembrhhbwaxzyga",
+    "deploy:function:edit-image": "supabase functions deploy edit-image --no-verify-jwt --project-ref wifhzvembrhhbwaxzyga",
+    "deploy:functions": "npm run deploy:function:apply-filter && npm run deploy:function:edit-image"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
