@@ -13,29 +13,25 @@ Project details used by this repo:
 
 ## Project Root
 
-Run all commands from:
-
-```powershell
-C:\Users\andre\OneDrive\Documents\CODEX\pawtrait-pet-palace-main\pawtrait-pet-palace-main
-```
+Run all commands from the repository root (the directory containing `package.json`).
 
 ## Frontend Deployment
 
 Build locally:
 
-```powershell
+```bash
 npm run build
 ```
 
 Deploy the built frontend to Firebase Hosting:
 
-```powershell
+```bash
 npm run deploy:hosting
 ```
 
 Equivalent direct command:
 
-```powershell
+```bash
 firebase deploy --only hosting
 ```
 
@@ -43,25 +39,25 @@ firebase deploy --only hosting
 
 Deploy `apply-filter`:
 
-```powershell
+```bash
 npm run deploy:function:apply-filter
 ```
 
 Deploy `edit-image`:
 
-```powershell
+```bash
 npm run deploy:function:edit-image
 ```
 
 Deploy both functions:
 
-```powershell
+```bash
 npm run deploy:functions
 ```
 
 Equivalent direct commands:
 
-```powershell
+```bash
 supabase functions deploy apply-filter --no-verify-jwt --project-ref wifhzvembrhhbwaxzyga
 supabase functions deploy edit-image --no-verify-jwt --project-ref wifhzvembrhhbwaxzyga
 ```
@@ -70,20 +66,20 @@ supabase functions deploy edit-image --no-verify-jwt --project-ref wifhzvembrhhb
 
 For a frontend-only change:
 
-```powershell
+```bash
 npm run build
 npm run deploy:hosting
 ```
 
 For an edge-function-only change:
 
-```powershell
+```bash
 npm run deploy:functions
 ```
 
 For a full release:
 
-```powershell
+```bash
 npm run build
 npm run deploy:functions
 npm run deploy:hosting
@@ -95,13 +91,13 @@ Before deploying, make sure:
 
 - You are logged into Firebase CLI:
 
-```powershell
+```bash
 firebase login
 ```
 
 - You are logged into Supabase CLI:
 
-```powershell
+```bash
 supabase login
 ```
 
@@ -111,7 +107,7 @@ supabase login
 
 Frontend `.env` values:
 
-```powershell
+```bash
 VITE_SUPABASE_URL="https://wifhzvembrhhbwaxzyga.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY="your_publishable_key"
 ```
@@ -125,7 +121,7 @@ Supabase function secrets:
 
 Example secret commands:
 
-```powershell
+```bash
 supabase secrets set GEMINI_API_KEY=YOUR_KEY --project-ref wifhzvembrhhbwaxzyga
 supabase secrets set RESEND_API_KEY=YOUR_KEY --project-ref wifhzvembrhhbwaxzyga
 ```
@@ -152,6 +148,6 @@ After function deploy:
 
 Current checkpoint commit already pushed to GitHub:
 
-```powershell
+```bash
 c013c29
 ```

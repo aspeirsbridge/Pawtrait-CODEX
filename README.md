@@ -52,7 +52,7 @@ Deploy functions after setting secrets:
 
 A dedicated deployment guide is included here:
 
-- [DEPLOYMENT.md](C:\Users\andre\OneDrive\Documents\CODEX\pawtrait-pet-palace-main\pawtrait-pet-palace-main\DEPLOYMENT.md)
+- [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 Helpful deployment commands:
 
